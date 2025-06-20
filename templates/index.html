@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhancement Avanzato Immagini - Multi-Model AI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        .models-status {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .model-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .model-badge.active {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .model-badge.inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        .upload-area {
+            border: 3px dashed #3498db;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #ecf0f1;
+        }
+        .upload-area:hover {
+            background-color: #e8f4fd;
+            border-color: #2980b9;
+            transform: scale(1.02);
+        }
+        .upload-area.dragover {
+            background-color: #d6e9f7;
+            border-color: #2980b9;
+            transform: scale(1.05);
+        }
+        .options {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .option-group {
+            margin-bottom: 20px;
+        }
+        .option-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+        select, button {
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        select {
+            cursor: pointer;
+            background-color: white;
+            width: 250px;
+        }
+        select:hover {
+            border-color: #3498db;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            min-width: 200px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .models-info {
+            background-color: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .models-info h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .model-description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+        }
+        .model-description strong {
+            color: #1976d2;
+        }
+        .results {
+            display: none;
+            margin-top: 40px;
+        }
+        .image-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .image-box {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .image-box h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .image-box img {
+            width: 100%;
+            max-height: 600px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: zoom-in;
+            transition: transform 0.3s;
+        }
+        .image-box img:hover {
+            transform: scale(1.02);
+        }
+        .image-info {
+            margin-top: 15px;
+            text-align: center;
+            color: #666;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-text {
+            color: #667eea;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 18px;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            background-color: #f8d7da;
+            text-align: center;
+            font-weight: bold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            cursor: zoom-out;
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 95%;
+            max-height: 95%;
+            margin-top: 1%;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close:hover {
+            color: #bbb;
+        }
+        .download-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #43a047 0%, #1e88e5 100%);
+            padding: 15px 40px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Enhancement Avanzato Immagini</h1>
+        <p class="subtitle">
+            Sistema Multi-Modello AI per Videosorveglianza
+        </p>
+        
+        <div class="models-status" id="modelsStatus">
+            <div class="model-badge">Verifica modelli...</div>
+        </div>
+        
+        <div class="models-info">
+            <h3>🤖 Modelli AI Disponibili:</h3>
+            <div class="model-description">
+                <strong>CodeFormer:</strong> Il più avanzato per volti - Usa transformer e discrete codebook per risultati fotorealistici
+            </div>
+            <div class="model-description">
+                <strong>GFPGAN v1.3:</strong> Veloce e affidabile - Specializzato in face restoration con GAN
+            </div>
+            <div class="model-description">
+                <strong>Real-ESRGAN:</strong> Super-resolution 4x generale - Ottimo per tutti i tipi di immagini
+            </div>
+            <div class="model-description">
+                <strong>SwinIR:</strong> Stato dell'arte - Transformer-based per la massima qualità
+            </div>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <p style="font-size: 60px; margin: 0;">📸</p>
+            <p style="font-size: 24px; font-weight: bold;">Trascina qui l'immagine</p>
+            <p style="color: #666;">o clicca per selezionare</p>
+            <p style="font-size: 14px; color: #999;">Formati: JPG, PNG, BMP (Max 16MB)</p>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div class="options">
+            <div class="option-group">
+                <label for="enhancementType">🎯 Tipo di Enhancement:</label>
+                <select id="enhancementType">
+                    <option value="auto">Auto-Detect (Generale)</option>
+                    <option value="face">Volti (Face Enhancement)</option>
+                    <option value="plate">Targhe (License Plate)</option>
+                </select>
+            </div>
+            
+            <div class="option-group">
+                <label for="modelChoice">🤖 Modello AI:</label>
+                <select id="modelChoice">
+                    <option value="best">Migliore Disponibile</option>
+                    <option value="codeformer">CodeFormer (Top per volti)</option>
+                    <option value="gfpgan">GFPGAN (Veloce)</option>
+                    <option value="realesrgan">Real-ESRGAN (Versatile)</option>
+                    <option value="swinir">SwinIR (Massima qualità)</option>
+                </select>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="processBtn" disabled>🎨 Elabora Immagine</button>
+            </div>
+        </div>
+        
+        <div class="loading">
+            <div class="spinner"></div>
+            <p class="progress-text">Elaborazione AI in corso...</p>
+            <p style="color: #666;">Il modello sta analizzando e migliorando l'immagine</p>
+        </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="results">
+            <h2 style="text-align: center; color: #2c3e50;">✨ Risultati Enhancement</h2>
+            <div class="image-container">
+                <div class="image-box">
+                    <h3>📥 Originale</h3>
+                    <img id="originalImage" src="" alt="Immagine originale">
+                    <div class="image-info" id="originalInfo"></div>
+                </div>
+                <div class="image-box">
+                    <h3>🎨 Enhanced</h3>
+                    <img id="enhancedImage" src="" alt="Immagine migliorata">
+                    <div class="image-info" id="enhancedInfo"></div>
+                    <div class="download-section">
+                        <button id="downloadBtn" class="download-btn">💾 Scarica HD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+    
+    <script>
+        let selectedFile = null;
+        let enhancedFilename = null;
+        
+        // Elementi DOM
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loading = document.querySelector('.loading');
+        const results = document.querySelector('.results');
+        const errorDiv = document.getElementById('error');
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeModal = document.getElementsByClassName('close')[0];
+        
+        // Verifica stato modelli
+        fetch('/status')
+            .then(response => response.json())
+            .then(data => {
+                const statusDiv = document.getElementById('modelsStatus');
+                statusDiv.innerHTML = '';
+                
+                // Mostra stato di ogni modello
+                const models = {
+                    'codeformer': 'CodeFormer',
+                    'gfpgan': 'GFPGAN v1.3',
+                    'realesrgan': 'Real-ESRGAN',
+                    'swinir': 'SwinIR'
+                };
+                
+                for (const [key, name] of Object.entries(models)) {
+                    const badge = document.createElement('div');
+                    badge.className = `model-badge ${data.models[key] ? 'active' : 'inactive'}`;
+                    badge.innerHTML = `${data.models[key] ? '✅' : '❌'} ${name}`;
+                    statusDiv.appendChild(badge);
+                }
+                
+                // Aggiungi info device
+                const deviceBadge = document.createElement('div');
+                deviceBadge.className = 'model-badge active';
+                deviceBadge.innerHTML = `🖥️ ${data.device}`;
+                statusDiv.appendChild(deviceBadge);
+            })
+            .catch(error => {
+                console.error('Errore verifica stato:', error);
+            });
+        
+        // Upload area click
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            handleFileSelect(e.target.files[0]);
+        });
+        
+        // Drag and drop
+        let dragCounter = 0;
+        
+        uploadArea.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter++;
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+        
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter--;
+            if (dragCounter === 0) {
+                uploadArea.classList.remove('dragover');
+            }
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter = 0;
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+        
+        function handleFileSelect(file) {
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showError('Seleziona solo file immagine');
+                return;
+            }
+            
+            selectedFile = file;
+            processBtn.disabled = false;
+            errorDiv.style.display = 'none';
+            
+            // Aggiorna UI
+            uploadArea.innerHTML = `
+                <p style="font-size: 60px; margin: 0;">✅</p>
+                <p style="font-size: 20px; font-weight: bold;">${file.name}</p>
+                <p style="color: #666;">Dimensione: ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <p style="font-size: 14px; color: #999;">Clicca per cambiare file</p>
+            `;
+        }
+        
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        // Process button
+        processBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('enhancement_type', document.getElementById('enhancementType').value);
+            formData.append('model_choice', document.getElementById('modelChoice').value);
+            
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            errorDiv.style.display = 'none';
+            processBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Mostra risultati
+                    document.getElementById('originalImage').src = data.original;
+                    document.getElementById('enhancedImage').src = data.enhanced;
+                    document.getElementById('originalInfo').innerHTML = `
+                        Dimensioni: ${data.original_size}<br>
+                        File originale
+                    `;
+                    document.getElementById('enhancedInfo').innerHTML = `
+                        Dimensioni: ${data.enhanced_size}<br>
+                        Modello: ${data.model_used}
+                    `;
+                    enhancedFilename = data.enhanced_filename;
+                    results.style.display = 'block';
+                    
+                    // Scroll ai risultati
+                    results.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error(data.error || 'Errore sconosciuto');
+                }
+            } catch (error) {
+                showError(`Errore: ${error.message}`);
+            } finally {
+                loading.style.display = 'none';
+                processBtn.disabled = false;
+            }
+        });
+        
+        // Download button
+        downloadBtn.addEventListener('click', () => {
+            if (enhancedFilename) {
+                window.location.href = `/download/${enhancedFilename}`;
+            }
+        });
+        
+        // Image zoom modal
+        document.getElementById('originalImage').onclick = function() {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+        }
+        
+        document.getElementById('enhancedImage').onclick = function() {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+        }
+        
+        closeModal.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        modal.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        // Auto-select model based on enhancement type
+        document.getElementById('enhancementType').addEventListener('change', function() {
+            const modelSelect = document.getElementById('modelChoice');
+            if (this.value === 'face') {
+                modelSelect.value = 'codeformer';
+            } else if (this.value === 'plate') {
+                modelSelect.value = 'realesrgan';
+            } else {
+                modelSelect.value = 'best';
+            }
+        });
+    </script>
+</body>
+</html>
