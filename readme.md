@@ -3,81 +3,45 @@
 
 Sistema professionale per il miglioramento di volti e targhe da immagini CCTV con modelli GFPGAN, Real-ESRGAN, CodeFormer.
 
-## 🚨 REQUISITI WINDOWS
+## 🚀 Installazione Automatica (Raccomandato)
 
-### Software Richiesto
-- **Windows 10/11** (64-bit)
-- **Miniconda/Anaconda** - [Download](https://docs.conda.io/en/latest/miniconda.html)
-- **Git for Windows** - [Download](https://git-scm.com/download/win)
-- **NVIDIA Drivers** (opzionale per GPU) - [Download](https://www.nvidia.com/drivers)
+### Setup One-Click
+1. Scarica il progetto: [Download ZIP](https://github.com/pandoradiscoverer/surveillance-enhancement/archive/main.zip)
+2. Estrai in una cartella (es. `C:\surveillance-enhancement`)
+3. **Doppio click** su `install_and_run.bat`
 
-### Hardware Minimo
-- CPU: Intel i5-8400 / AMD Ryzen 5 2600
-- RAM: 8GB
-- Storage: 15GB liberi
-- GPU: NVIDIA GTX 1060 6GB (opzionale)
-
-### Hardware Raccomandato
-- CPU: Intel i7-10700K / AMD Ryzen 7 3700X
-- RAM: 16GB+
-- Storage: 25GB SSD
-- GPU: NVIDIA RTX 3060+ (12GB VRAM)
-
-## 🚀 Installazione Windows
-
-### 1. Installa Anaconda/Miniconda
-```powershell
-# Scarica e installa Miniconda per Windows
-# https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe
-# Riavvia PowerShell dopo installazione
-```
-
-### 2. Clona Repository
-```powershell
-git clone https://github.com/pandoradiscoverer/surveillance-enhancement.git
-cd surveillance-enhancement
-```
-
-### 3. Setup Ambiente Conda
-```powershell
-# Crea ambiente da environment.yaml
-conda env create -f environment.yaml
-
-# Attiva ambiente
-conda activate surveillance-enhancement
-```
-
-### 4. Avvia Sistema
-```powershell
-python app.py
-```
+Lo script automaticamente:
+- ✅ Installa Miniconda (se mancante)
+- ✅ Installa Git (se mancante) 
+- ✅ Configura ambiente Conda
+- ✅ Scarica modelli AI (3.5GB)
+- ✅ Avvia sistema con browser
 
 **URL Accesso:** http://localhost:5000
 
-## 🛠️ Setup Automatico Windows
+## 🔧 Installazione Manuale
 
-Script PowerShell per installazione completa:
+### Prerequisiti
+- **Windows 10/11** (64-bit)
+- **8GB RAM** (16GB raccomandati)
+- **15GB storage** liberi
 
+### Setup Manuale
 ```powershell
-# Esegui come amministratore
-python setup_conda_environment.py
+# 1. Installa Miniconda
+# Download: https://docs.conda.io/en/latest/miniconda.html
+
+# 2. Clone repository
+git clone https://github.com/pandoradiscoverer/surveillance-enhancement.git
+cd surveillance-enhancement
+
+# 3. Crea ambiente
+conda env create -f environment.yaml
+conda activate surveillance-enhancement
+
+# 4. Avvia
+python app.py
 ```
-
-Lo script automaticamente:
-- ✅ Verifica prerequisiti Windows
-- ✅ Configura ambiente Conda
-- ✅ Scarica modelli AI (3.5GB)
-- ✅ Testa GPU NVIDIA
-- ✅ Configura server Waitress
-- ✅ Crea script avvio Windows
-
-## 🌐 Server di Produzione
-
-Il sistema usa **Waitress WSGI** per prestazioni ottimali su Windows:
-- Server multi-threaded
-- Gestione memoria ottimizzata
-- Resilienza a crash
-- Performance superiori al dev server Flask
 
 ## 🎯 Modelli AI Supportati
 
@@ -87,135 +51,115 @@ Il sistema usa **Waitress WSGI** per prestazioni ottimali su Windows:
 | **CodeFormer** | 10s | Face enhancement | Volti molto degradati |
 | **Real-ESRGAN** | 8s | Super-resolution | Targhe automobilistiche |
 
-## 🔧 Configurazione Windows
+## 💻 Requisiti Hardware
 
-### GPU NVIDIA
-Verifica CUDA:
-```powershell
-conda activate surveillance-enhancement
-python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
-```
+### GPU NVIDIA (Raccomandato)
+- **RTX 4090**: ~3s per immagine 1080p
+- **RTX 3080**: ~5s per immagine 1080p  
+- **RTX 3060**: ~8s per immagine 1080p
+- **GTX 1060**: ~15s per immagine 1080p
 
-### Ottimizzazione Memoria
+### CPU Mode
+- **Intel i7/AMD Ryzen 7**: ~30s per immagine
+- **Intel i5/AMD Ryzen 5**: ~45s per immagine
+
+## 🔧 Configurazione
+
+### GPU Settings
 File `config.yaml`:
 ```yaml
 gpu:
-  memory_fraction: 0.8  # Usa 80% VRAM
+  memory_fraction: 0.8  # 80% VRAM
   device_id: 0          # Prima GPU
-models:
-  tile_size: 512        # Riduci se errori memoria
+  fallback_to_cpu: true
 ```
 
-## 📁 Struttura Directory Windows
-```
-surveillance-enhancement/
-├── app.py                    # Server principale
-├── environment.yaml          # Dipendenze Conda
-├── config.yaml              # Configurazione
-├── templates/
-│   └── index.html           # Web interface
-├── models/                  # Modelli AI (auto-download)
-├── logs/                    # Log applicazione
-└── outputs/                 # Immagini elaborate
+### Server Settings
+```yaml
+server:
+  host: "127.0.0.1"
+  port: 5000
+  max_file_size_mb: 100
 ```
 
-## 🚨 Troubleshooting Windows
+## 🎨 Casi d'Uso
+
+### Miglioramento Volti CCTV
+- Enhancement volti per identificazione
+- Risoluzione immagini telecamere sicurezza
+- Miglioramento contrasto e dettagli
+
+### Lettura Targhe
+- Super-resolution targhe sfocate
+- Enhancement caratteri per OCR
+- Miglioramento visibilità notturna
+
+## 🚨 Troubleshooting
 
 ### GPU Non Rilevata
 ```powershell
-# Verifica driver NVIDIA
+# Verifica driver
 nvidia-smi
 
-# Reinstalla PyTorch con CUDA
-conda activate surveillance-enhancement
+# Reinstalla CUDA
 conda install pytorch pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
 
-### Errore Memoria
+### Memoria Insufficiente
 ```yaml
-# config.yaml
+# config.yaml - riduci utilizzo
 gpu:
   memory_fraction: 0.6
 models:
   tile_size: 256
 ```
 
-### Modelli Non Scaricati
-```powershell
-python app.py --download-models
+### Errori Antivirus
+- Aggiungi cartella alle esclusioni
+- Escludi `python.exe` da scansione real-time
+
+## 📁 Struttura Progetto
+```
+surveillance-enhancement/
+├── install_and_run.bat     # Setup automatico
+├── app.py                  # Server principale  
+├── environment.yaml        # Dipendenze Conda
+├── config.yaml            # Configurazione
+├── templates/
+│   └── index.html         # Web interface
+├── models/                # Modelli AI (auto-download)
+└── outputs/               # Immagini elaborate
 ```
 
-### Antivirus Interferenza
-- Aggiungi cartella progetto alle esclusioni
-- Escludi `python.exe` dell'ambiente Conda
+## 🔄 Avvio Rapido
 
-## 🎨 Casi d'Uso
-
-### Miglioramento Volti CCTV
-- Risoluzione immagini da telecamere di sicurezza
-- Enhancement di volti per identificazione
-- Miglioramento qualità per analisi
-
-### Lettura Targhe
-- Super-resolution per targhe sfocate
-- Miglioramento contrasto caratteri
-- Enhancement per sistemi OCR
-
-## 🖥️ Avvio Automatico Windows
-
-### Script Batch
+### Prima Volta
 ```batch
-@echo off
-cd /d "C:\surveillance-enhancement"
+install_and_run.bat
+```
+
+### Avvii Successivi
+```batch
+REM Opzione 1: Script automatico
+install_and_run.bat
+
+REM Opzione 2: Manuale
 conda activate surveillance-enhancement
 python app.py
-pause
 ```
-
-### Servizio Windows (Opzionale)
-```powershell
-# Installa NSSM (Non-Sucking Service Manager)
-# Crea servizio Windows per avvio automatico
-```
-
-## 📊 Performance Windows
-
-### RTX 4090
-- GFPGAN: ~3s per immagine 1080p
-- CodeFormer: ~5s per immagine 1080p
-- Real-ESRGAN: ~4s per immagine 1080p
-
-### RTX 3060
-- GFPGAN: ~8s per immagine 1080p
-- CodeFormer: ~12s per immagine 1080p
-- Real-ESRGAN: ~10s per immagine 1080p
 
 ## 🔄 Aggiornamenti
 
 ```powershell
-conda activate surveillance-enhancement
 git pull origin main
 conda env update -f environment.yaml --prune
 ```
 
-## 🆘 Supporto Windows
-
-**Prerequisiti mancanti:**
-- Installa Visual Studio C++ Redistributable
-- Installa .NET Framework 4.8+
-
-**Errori comuni:**
-- Path troppo lungo: Abilita path lunghi Windows
-- Permessi: Esegui PowerShell come amministratore
-- Firewall: Consenti Python attraverso Windows Firewall
-
-## 📞 Contatti
+## 📞 Supporto
 
 - **Issues**: [GitHub Issues](https://github.com/pandoradiscoverer/surveillance-enhancement/issues)
-- **Supporto Tecnico**: Documentazione GitHub
-- **Aggiornamenti**: Seguire repository per nuove release
+- **Documentation**: Repository GitHub
 
 ---
 
 **🎯 SISTEMA PROFESSIONALE PER ENHANCEMENT VIDEOSORVEGLIANZA**
-*Ottimizzato per Windows e telecamere di sicurezza*
