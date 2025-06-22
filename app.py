@@ -512,6 +512,19 @@ if __name__ == "__main__":
     print("📋 Status endpoint: http://localhost:5000/status")
     print("\nPress Ctrl+C to stop")
 
+    # Apri browser automaticamente
+    import webbrowser
+    import threading
+
+    def open_browser():
+        import time
+
+        time.sleep(1.5)  # Attende avvio server
+        webbrowser.open("http://localhost:5000")
+
+    # Avvia browser in thread separato
+    threading.Thread(target=open_browser, daemon=True).start()
+
     try:
         from waitress import serve
 
