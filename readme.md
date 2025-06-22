@@ -1,7 +1,7 @@
 # Surveillance Enhancement System
 **Sistema AI per Enhancement di Immagini di Videosorveglianza - Windows**
 
-Sistema forense professionale per polizia giudiziaria con modelli GFPGAN, Real-ESRGAN, CodeFormer e server WSGI Waitress.
+Sistema professionale per il miglioramento di volti e targhe da immagini CCTV con modelli GFPGAN, Real-ESRGAN, CodeFormer.
 
 ## 🚨 REQUISITI WINDOWS
 
@@ -83,9 +83,9 @@ Il sistema usa **Waitress WSGI** per prestazioni ottimali su Windows:
 
 | Modello | Velocità | Specialità | Uso Ideale |
 |---------|----------|------------|------------|
-| **GFPGAN** | 6s | Face restoration | Volti frontali CCTV |
-| **CodeFormer** | 10s | Face enhancement | Volti degradati |
-| **Real-ESRGAN** | 8s | Super-resolution | Scene complete, targhe |
+| **GFPGAN** | 6s | Face restoration | Volti da telecamere CCTV |
+| **CodeFormer** | 10s | Face enhancement | Volti molto degradati |
+| **Real-ESRGAN** | 8s | Super-resolution | Targhe automobilistiche |
 
 ## 🔧 Configurazione Windows
 
@@ -112,11 +112,10 @@ surveillance-enhancement/
 ├── app.py                    # Server principale
 ├── environment.yaml          # Dipendenze Conda
 ├── config.yaml              # Configurazione
-├── forensic_logger.py        # Sistema audit
 ├── templates/
 │   └── index.html           # Web interface
 ├── models/                  # Modelli AI (auto-download)
-├── logs/                    # Log forensi
+├── logs/                    # Log applicazione
 └── outputs/                 # Immagini elaborate
 ```
 
@@ -150,21 +149,17 @@ python app.py --download-models
 - Aggiungi cartella progetto alle esclusioni
 - Escludi `python.exe` dell'ambiente Conda
 
-## 🔒 Uso Forense Windows
+## 🎨 Casi d'Uso
 
-### Chain of Custody
-- Tutti i file processati hanno hash SHA256
-- Log completo in `./logs/forensic_YYYYMMDD.log`
-- Database audit SQLite in `./data/forensic.db`
+### Miglioramento Volti CCTV
+- Risoluzione immagini da telecamere di sicurezza
+- Enhancement di volti per identificazione
+- Miglioramento qualità per analisi
 
-### Backup Automatico
-```yaml
-# config.yaml
-backup:
-  auto_backup: true
-  backup_path: "D:/Backup/Surveillance"
-  backup_interval_hours: 12
-```
+### Lettura Targhe
+- Super-resolution per targhe sfocate
+- Miglioramento contrasto caratteri
+- Enhancement per sistemi OCR
 
 ## 🖥️ Avvio Automatico Windows
 
@@ -222,5 +217,5 @@ conda env update -f environment.yaml --prune
 
 ---
 
-**🏛️ SISTEMA CERTIFICATO PER USO FORENSE**
-*Conforme alle procedure di polizia giudiziaria italiana*
+**🎯 SISTEMA PROFESSIONALE PER ENHANCEMENT VIDEOSORVEGLIANZA**
+*Ottimizzato per Windows e telecamere di sicurezza*
