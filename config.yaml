@@ -1,0 +1,199 @@
+# Configurazione Sistema Surveillance Enhancement
+# Ottimizzato per uso forense di polizia giudiziaria
+
+system:
+  debug: false
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  max_file_size_mb: 100
+  supported_formats: [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".webp"]
+  
+# Configurazione GPU
+gpu:
+  device_id: 0
+  memory_fraction: 0.85
+  allow_growth: true
+  fallback_to_cpu: true
+  
+# Configurazione Modelli AI
+models:
+  models_path: "./models"
+  download_timeout: 300
+  
+  # GFPGAN - Face Enhancement
+  gfpgan:
+    enabled: true
+    upscale: 2
+    arch: "clean"  # clean, original
+    bg_upsampler: null
+    tile_size: 512
+    
+  # Real-ESRGAN - General Enhancement
+  realesrgan:
+    enabled: true
+    scale: 4
+    tile: 512
+    tile_pad: 10
+    pre_pad: 0
+    half_precision: true
+    
+  # CodeFormer - Advanced Face Restoration
+  codeformer:
+    enabled: true
+    upscale: 2
+    fidelity_weight: 0.5  # 0-1, higher = more fidelity to original
+    
+  # SwinIR - License Plate Enhancement
+  swinir:
+    enabled: true
+    scale: 4
+    window_size: 8
+    
+# Configurazione Processing
+processing:
+  auto_detect_type: true
+  batch_processing: false
+  max_concurrent: 2
+  quality_output: 95
+  preserve_exif: true
+  create_comparison: true
+  
+# Enhancement Types Detection
+detection:
+  face_confidence_threshold: 0.7
+  plate_confidence_threshold: 0.6
+  use_yolo_detection: true
+  
+# Configurazione Web Server
+server:
+  host: "127.0.0.1"
+  port: 5000
+  debug: false
+  threaded: true
+  max_content_length: 104857600  # 100MB
+  
+# Sicurezza e Privacy
+security:
+  session_timeout: 3600  # 1 ora
+  max_uploads_per_session: 50
+  auto_cleanup_temp: true
+  cleanup_interval_hours: 24
+  
+# Configurazione Forense
+forensic:
+  chain_of_custody: true
+  hash_verification: true
+  timestamp_operations: true
+  metadata_preservation: true
+  audit_logging: true
+  
+  # Algoritmi hash per verifica
+  hash_algorithms: ["sha256", "md5"]
+  
+  # Watermarking per tracciabilità
+  watermark:
+    enabled: false
+    text: "PROCESSED BY SURVEILLANCE SYSTEM"
+    opacity: 10
+    position: "bottom_right"
+    
+# Logging
+logging:
+  file_logging: true
+  log_file: "./logs/surveillance.log"
+  max_log_size_mb: 50
+  backup_count: 5
+  log_rotation: true
+  
+  # Campi da loggare
+  log_fields:
+    - timestamp
+    - user_ip
+    - filename
+    - file_hash
+    - enhancement_type
+    - model_used
+    - processing_time
+    - output_quality
+    - success_status
+    
+# Database (per tracking avanzato)
+database:
+  enabled: false
+  type: "sqlite"  # sqlite, postgresql, mysql
+  path: "./data/surveillance.db"
+  
+# Backup e Recovery
+backup:
+  auto_backup: true
+  backup_interval_hours: 12
+  max_backups: 30
+  backup_path: "./backups"
+  
+# Performance Monitoring
+monitoring:
+  enabled: true
+  metrics_interval: 60  # secondi
+  alert_thresholds:
+    cpu_percent: 90
+    memory_percent: 85
+    gpu_memory_percent: 90
+    disk_usage_percent: 90
+    
+# Notifiche
+notifications:
+  enabled: false
+  email:
+    smtp_server: ""
+    smtp_port: 587
+    username: ""
+    password: ""
+    recipients: []
+    
+# Configurazione avanzata per casi specifici
+advanced:
+  # Per immagini molto degradate
+  extreme_enhancement:
+    enabled: false
+    multi_pass: true
+    passes: 3
+    
+  # Pre-processing automatico
+  auto_preprocessing:
+    denoise: true
+    contrast_enhancement: true
+    gamma_correction: true
+    
+  # Post-processing
+  auto_postprocessing:
+    sharpening: true
+    color_correction: false
+    
+# Profili predefiniti per diversi scenari
+profiles:
+  # Profilo per CCTV di bassa qualità
+  cctv_lowres:
+    enhancement_type: "auto"
+    model_preference: "realesrgan"
+    upscale_factor: 4
+    denoise: true
+    
+  # Profilo per volti
+  face_enhancement:
+    enhancement_type: "face"
+    model_preference: "gfpgan"
+    upscale_factor: 2
+    bg_upsampler: true
+    
+  # Profilo per targhe
+  license_plate:
+    enhancement_type: "plate"
+    model_preference: "swinir"
+    upscale_factor: 4
+    text_enhancement: true
+    
+  # Profilo massima qualità (lento)
+  max_quality:
+    enhancement_type: "auto"
+    model_preference: "combined"
+    multi_pass: true
+    preserve_details: true

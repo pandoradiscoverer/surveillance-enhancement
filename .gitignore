@@ -1,69 +1,156 @@
-# Python
+# Surveillance Enhancement System - .gitignore
+
+# AI Models (large files - download automaticamente)
+models/
+*.pth
+*.onnx
+*.pb
+*.tflite
+*.bin
+*.pt
+
+# Dati sensibili e output
+uploads/
+outputs/
+temp/
+processed/
+evidence/
+enhanced/
+
+# Log forensi e database
+logs/
+*.log
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup e cache
+backups/
+cache/
+.cache/
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
-env/
+*.so
+
+# Configurazione locale
+config_local.yaml
+.env
+.env.local
+secrets.yaml
+
+# Ambiente virtuale (usare Conda)
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
 .venv
-.conda
 
-# Virtual environments
-surveillance_env/
-surveillance_venv/
-
-# IDE
+# IDE e editor
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.project
-.pydevproject
-
-# Project specific
-uploads/
-enhanced/
-models/*.pth
-models/*.pt
-*.jpg
-*.jpeg
-*.png
-*.bmp
-!docs/examples/*.jpg
-!docs/images/*.png
-
-# Logs
-logs/
-*.log
-
-# OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# Jupyter
+# Python
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebooks
 .ipynb_checkpoints/
 *.ipynb
 
-# Testing
+# Windows specifico
+desktop.ini
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# NVIDIA e CUDA
+*.fatbin
+*.cubin
+*.ptx
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Test output
+test_outputs/
+test_results/
+benchmark_results/
+
+# Documentation build
+docs/_build/
+site/
+
+# Large media files (esempi)
+*.avi
+*.mov
+*.mp4
+*.mkv
+*.wmv
+*.flv
+
+# Zip e archivi
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+
+# Sistema operativo
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Git
+*.orig
+*.rej
+
+# Flask
+instance/
+.webassets-cache
+
+# Coverage reports
 .coverage
-htmlcov/
-.pytest_cache/
-.tox/
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
 
-# Distribution
-build/
-dist/
-*.egg-info/
-.eggs/
+# Translations
+*.mo
+*.pot
 
-# Secrets
-.env
-config.yaml
-secrets.json
-"""
+# Performance profiling
+*.prof
+*.pyprof
+*.profile
+
+# Forensic evidence (NON committare mai)
+crime_scene/
+case_files/
+investigation/
+evidence_*
+suspect_*
+victim_*
